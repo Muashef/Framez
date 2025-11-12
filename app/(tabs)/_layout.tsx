@@ -1,35 +1,50 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+"use client"
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useAuth } from "@/context/AuthContext"
+import { Redirect, Tabs } from "expo-router"
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { session, loading } = useAuth()
+
+  if (loading) {
+    return null
+  }
+
+  if (!session) {
+    return <Redirect href="/screens/auth/login" />
+  }
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "#000",
+        tabBarInactiveTintColor: "#ccc",
         headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Feed",
+          tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>🏠</Text>,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="create"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Create",
+          tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>✏️</Text>,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>👤</Text>,
         }}
       />
     </Tabs>
-  );
+  )
 }
+
+import { Text } from "react-native"

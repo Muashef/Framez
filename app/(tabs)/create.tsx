@@ -25,7 +25,6 @@ export default function CreatePostScreen() {
   const { createPost } = usePosts()
   const { user } = useAuth()
 
-  // ✅ Request media library permission & open picker
   const pickImage = async () => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -50,7 +49,6 @@ export default function CreatePostScreen() {
     }
   }
 
-  // ✅ Proper upload for Expo/React Native
   const uploadImage = async (uri: string) => {
     try {
       const filename = `${Date.now()}.jpg`

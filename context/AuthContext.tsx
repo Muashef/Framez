@@ -1,5 +1,3 @@
-"use client"
-
 import { supabase } from "@/services/supabase"
 import type { User } from "@/types"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -23,7 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check existing session
+    
     const checkSession = async () => {
       try {
         const savedSession = await AsyncStorage.getItem("supabase_session")
@@ -35,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } catch (error) {
-        console.error("[v0] Session check error:", error)
+        console.error("Session check error:", error)
       } finally {
         setLoading(false)
       }
@@ -43,7 +41,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     checkSession()
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -67,29 +64,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { data, error } = await supabase.from("users").select("*").eq("id", userId).single()
 
-      console.log("[v0] Fetching user profile for:", userId, data)
+      console.log("Fetching user profile for:", userId, data)
       if (error) throw error
       setUser(data)
     } catch (error) {
-      console.error("[v0] Profile fetch error:", error)
+      console.error("Profile fetch error:", error)
     }
   }
 
   const signup = async (email: string, password: string, username: string) => {
     try {
-      console.log("[v0] Starting signup for:", email)
+      console.log("Starting signup for:", email)
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
       })
 
-      console.log("[v0] Auth signup response:", authData, authError)
+      console.log("Auth signup response:", authData, authError)
       if (authError) throw authError
 
       if (authData.user) {
-        console.log("[v0] User created in auth, now inserting profile:", authData.user.id)
+        console.log("User created in auth, now inserting profile:", authData.user.id)
 
-        // Wait a moment for auth to fully sync
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
         const { data: profileData, error: profileError } = await supabase
@@ -106,21 +102,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log("[v0] Profile upsert response:", { data: profileData, error: profileError })
 
         if (profileError) {
-          console.error("[v0] Profile upsert failed:", profileError)
+          console.error("Profile upsert failed:", profileError)
           throw profileError
         } else {
           await fetchUserProfile(authData.user.id)
         }
       }
     } catch (error) {
-      console.error("[v0] Signup error:", error)
+      console.error("Signup error:", error)
       throw error
     }
   }
 
   const login = async (email: string, password: string) => {
     try {
-      console.log("[v0] Starting login for:", email)
+      console.log("Starting login for:", email)
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -132,7 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await fetchUserProfile(data.user.id)
       }
     } catch (error) {
-      console.error("[v0] Login error:", error)
+      console.error("Login error:", error)
       throw error
     }
   }

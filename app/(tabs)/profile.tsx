@@ -1,5 +1,3 @@
-"use client"
-
 import { useAuth } from "@/context/AuthContext"
 import { usePosts } from "@/context/PostsContext"
 import type { Post } from "@/types"

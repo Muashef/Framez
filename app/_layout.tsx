@@ -1,7 +1,6 @@
 import { AuthProvider } from "@/context/AuthContext"
 import { PostsProvider } from "@/context/PostsContext"
 import { Stack } from "expo-router"
-// import "./globals.css"; // Import globals.css at the top of the file
 
 export default function RootLayout() {
   return (

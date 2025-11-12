@@ -1,5 +1,3 @@
-"use client"
-
 import { supabase } from "@/services/supabase"
 import type { Post } from "@/types"
 import type React from "react"
@@ -32,7 +30,7 @@ export const PostsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           table: "posts",
         },
         (payload) => {
-          console.log("[v0] Real-time event:", payload.eventType)
+          console.log("Real-time event:", payload.eventType)
           if (payload.eventType === "INSERT") {
             fetchPosts()
           } else if (payload.eventType === "DELETE") {
@@ -71,19 +69,18 @@ export const PostsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } = await supabase.auth.getUser()
       if (!user) throw new Error("Not authenticated")
 
-      console.log("[v0] Creating post for user:", user.id)
+      console.log("Creating post for user:", user.id)
 
-      // Check if user profile exists
       const { data: userProfile, error: userError } = await supabase
         .from("users")
         .select("id")
         .eq("id", user.id)
         .single()
 
-      console.log("[v0] User profile check:", userProfile, userError)
+      console.log("User profile check:", userProfile, userError)
 
       if (!userProfile) {
-        console.log("[v0] User profile not found, creating one now...")
+        console.log("User profile not found, creating one now...")
         // Create profile if it doesn't exist
         const { error: createProfileError } = await supabase.from("users").insert({
           id: user.id,
@@ -91,7 +88,7 @@ export const PostsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           username: user.email?.split("@")[0] || "user",
         })
         if (createProfileError) {
-          console.error("[v0] Failed to create user profile:", createProfileError)
+          console.error("Failed to create user profile:", createProfileError)
           throw new Error("User profile not found and could not be created")
         }
       }
@@ -105,7 +102,7 @@ export const PostsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (error) throw error
       await fetchPosts()
     } catch (error) {
-      console.error("[v0] Create post error:", error)
+      console.error("Create post error:", error)
       throw error
     }
   }

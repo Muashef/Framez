@@ -1,5 +1,3 @@
-"use client"
-
 import { useAuth } from "@/context/AuthContext"
 import { Redirect, Tabs } from "expo-router"
 
